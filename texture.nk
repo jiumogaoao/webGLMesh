@@ -111,10 +111,10 @@ Read {
 }
 Transform {
  translate {1447 773}
+ rotate -90
  scale 1.321
  center {256 256}
  name Transform3
- selected true
  xpos -18
  ypos -42
 }
@@ -177,8 +177,9 @@ Write {
  file_type png
  use_limit true
  checkHashOnRead false
- version 4
+ version 5
  name Write1
+ selected true
  xpos -88
  ypos 29
 }
