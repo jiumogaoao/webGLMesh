@@ -87,12 +87,14 @@ var camera, scene, renderer;
 				// model
 
 				var loader = new THREE.OBJLoader( manager );
-				loader.load( 'test.obj', function ( object ) {
+				var objArry=["house1.obj","house2.obj","house3.obj","house4.obj","house5.obj","house6.obj","house7.obj"]
+				$.each(objArry,function(i,n){
+					loader.load( n, function ( object ) {
 
 					object.traverse( function ( child ) {
 
 						if ( child instanceof THREE.Mesh ) {
-
+							console.log(child)
 							child.material=new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );;
 
 						}
@@ -103,6 +105,8 @@ var camera, scene, renderer;
 						console.log(scene)
 
 					}, onProgress, onError );
+				})
+				
 
 
 				renderer = new THREE.CanvasRenderer();
