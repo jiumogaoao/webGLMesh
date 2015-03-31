@@ -99,7 +99,7 @@ var camera, scene, renderer;
 
 					} );
 
-						scene.add( object );
+						scene.add( object.children[0] );
 						console.log(scene)
 
 					}, onProgress, onError );
