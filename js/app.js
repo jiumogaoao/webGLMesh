@@ -64,7 +64,7 @@ var camera, scene, renderer;
 				};
 
 				var texture = new THREE.Texture();
-
+				var textureA = new THREE.Texture();
 				var onProgress = function ( xhr ) {
 					if ( xhr.lengthComputable ) {
 						var percentComplete = xhr.loaded / xhr.total * 100;
@@ -83,7 +83,12 @@ var camera, scene, renderer;
 					texture.needsUpdate = true;
 
 				} );
+				Tloader.load( 'a.jpg', function ( image ) {
 
+					textureA.image = image;
+					textureA.needsUpdate = true;
+
+				} );
 				// model
 
 				var loader = new THREE.OBJLoader( manager );
@@ -95,7 +100,7 @@ var camera, scene, renderer;
 							console.log(child)
 						if ( child instanceof THREE.Mesh ) {
 							console.log(child)
-							child.material=new THREE.MeshBasicMaterial( { map: texture, alphaMap:0,overdraw: 0.5 } );;
+							child.material=new THREE.MeshBasicMaterial( { map: texture, alphaMap:textureA,overdraw: 0.5 } );;
 
 						}
 
@@ -139,24 +144,6 @@ var camera, scene, renderer;
 				camera.updateProjectionMatrix();
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			function loadTexture( path ) {
-
-				var texture = new THREE.Texture( texture_placeholder );
-				var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
-
-				var image = new Image();
-				image.onload = function () {
-
-					texture.image = this;
-					texture.needsUpdate = true;
-
-				};
-				image.src = path;
-
-				return material;
 
 			}
 
