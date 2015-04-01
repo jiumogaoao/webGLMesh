@@ -26,11 +26,7 @@ function webglAvailable() {
 		}
 	}
 
-	if ( webglAvailable() ) {
-		renderer = new THREE.WebGLRenderer();
-	} else {
-		renderer = new THREE.CanvasRenderer();
-	}
+	
 
 var camera, scene, renderer;
 
@@ -40,7 +36,11 @@ var camera, scene, renderer;
 			lon = 90, onMouseDownLon = 0,
 			lat = 0, onMouseDownLat = 0,
 			phi = 0, theta = 0,
-			target = new THREE.Vector3();
+			target = new THREE.Vector3(),
+			touch={},
+			raycaster = new THREE.Raycaster(),
+			mouse = new THREE.Vector2(),
+			lastMt=null;
 
 			
 
@@ -92,10 +92,10 @@ var camera, scene, renderer;
 					loader.load( n, function ( object ) {
 
 					object.traverse( function ( child ) {
-
+							console.log(child)
 						if ( child instanceof THREE.Mesh ) {
 							console.log(child)
-							child.material=new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );;
+							child.material=new THREE.MeshBasicMaterial( { map: texture, alphaMap:0,overdraw: 0.5 } );;
 
 						}
 
@@ -109,7 +109,11 @@ var camera, scene, renderer;
 				
 
 
-				renderer = new THREE.CanvasRenderer();
+				if ( webglAvailable() ) {
+							renderer = new THREE.WebGLRenderer();
+						} else {
+							renderer = new THREE.CanvasRenderer();
+						}
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
@@ -159,6 +163,22 @@ var camera, scene, renderer;
 			function onDocumentMouseDown( event ) {
 
 				event.preventDefault();
+				event.stopPropagation();
+					event.preventDefault();
+					touch.time=new Date().getTime();
+					touch.name="";
+					touch.point={};
+					mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
+					mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
+	
+					raycaster.setFromCamera( mouse, camera );
+	
+					var intersects = raycaster.intersectObjects( scene.children );
+					if ( intersects.length > 0 ) {
+						touch.name=intersects[ 0 ].object.name;
+						touch.point=intersects[ 0 ].point
+					}
+					console.log(intersects)
 
 				isUserInteracting = true;
 
