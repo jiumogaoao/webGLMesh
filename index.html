@@ -42,6 +42,16 @@
         <div id="container"></div>
         <div id="message">请点击</div>
 
-<script src="js/app.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			player.setObj(["house1.obj","house2.obj","house3.obj","house4.obj","house5.obj","house6.obj","house7.obj"]);
+			player.setTexture(["test.gif","testHl.gif"]);
+			debugger;
+			player.chooseObj=function(name){
+				$("#message").html(name);
+			}
+			player.load();
+			player.play();
+		</script>
 	</body>
 </html>

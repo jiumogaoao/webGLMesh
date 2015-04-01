@@ -26,9 +26,11 @@ function webglAvailable() {
 		}
 	}
 
-	
-
-var camera, scene, renderer;
+var player={
+	chooseObj:function(name){}
+};	
+;(function(source){
+	var camera, scene, renderer;
 
 			var texture_placeholder,
 			isUserInteracting = false,
@@ -40,8 +42,11 @@ var camera, scene, renderer;
 			touch={},
 			raycaster = new THREE.Raycaster(),
 			mouse = new THREE.Vector2(),
+			objs=[],
+			textureUrl=[],
 			lastMt=null;
-
+			var texture = new THREE.Texture();
+			var textureHl = new THREE.Texture();
 			
 
 			function init() {
@@ -63,8 +68,7 @@ var camera, scene, renderer;
 
 				};
 
-				var texture = new THREE.Texture();
-				var textureA = new THREE.Texture();
+				
 				var onProgress = function ( xhr ) {
 					if ( xhr.lengthComputable ) {
 						var percentComplete = xhr.loaded / xhr.total * 100;
@@ -77,30 +81,30 @@ var camera, scene, renderer;
 
 
 				var Tloader = new THREE.ImageLoader( manager );
-				Tloader.load( 'test.png', function ( image ) {
+				debugger;
+				Tloader.load( textureUrl[0], function ( image ) {
 
 					texture.image = image;
 					texture.needsUpdate = true;
 
 				} );
-				Tloader.load( 'a.jpg', function ( image ) {
+				Tloader.load( textureUrl[1], function ( image ) {
 
-					textureA.image = image;
-					textureA.needsUpdate = true;
+					textureHl.image = image;
+					textureHl.needsUpdate = true;
 
 				} );
 				// model
 
 				var loader = new THREE.OBJLoader( manager );
-				var objArry=["house1.obj","house2.obj","house3.obj","house4.obj","house5.obj","house6.obj","house7.obj"]
-				$.each(objArry,function(i,n){
+				$.each(objs,function(i,n){
 					loader.load( n, function ( object ) {
 
 					object.traverse( function ( child ) {
 							console.log(child)
 						if ( child instanceof THREE.Mesh ) {
 							console.log(child)
-							child.material=new THREE.MeshBasicMaterial( { map: texture, alphaMap:textureA,overdraw: 0.5 } );;
+							child.material=new THREE.MeshBasicMaterial( { map: texture,overdraw: 0.5 } );;
 
 						}
 
@@ -164,7 +168,16 @@ var camera, scene, renderer;
 					if ( intersects.length > 0 ) {
 						touch.name=intersects[ 0 ].object.name;
 						touch.point=intersects[ 0 ].point
+						if(lastMt){
+							lastMt.map=texture;
+							lastMt.needsUpdate = true;
+						}
+						intersects[ 0 ].object.material.map=textureHl
+						intersects[ 0 ].object.material.needsUpdate = true;
+						lastMt=intersects[ 0 ].object.material
+						source.chooseObj(intersects[ 0 ].object.name)
 					}
+
 					console.log(intersects)
 
 				isUserInteracting = true;
@@ -184,6 +197,26 @@ var camera, scene, renderer;
 					lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
 					lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
 
+				}else{
+					mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
+					mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
+	
+					raycaster.setFromCamera( mouse, camera );
+	
+					var intersects = raycaster.intersectObjects( scene.children );
+					if ( intersects.length > 0 ) {
+						touch.name=intersects[ 0 ].object.name;
+						touch.point=intersects[ 0 ].point
+						if(lastMt){
+							lastMt.map=texture;
+							lastMt.needsUpdate = true;
+						}
+						intersects[ 0 ].object.material.map=textureHl
+						intersects[ 0 ].object.material.needsUpdate = true;
+						lastMt=intersects[ 0 ].object.material
+					}
+
+					console.log(intersects)
 				}
 			}
 
@@ -277,6 +310,15 @@ var camera, scene, renderer;
 				renderer.render( scene, camera );
 
 			}
-
-			init();
-			animate();
+			function setObj(array){
+				objs=array;
+			}
+			function setTexture(array){
+				textureUrl=array;debugger;
+			}
+			
+			source.load=init;
+			source.setObj=setObj;
+			source.setTexture=setTexture;
+			source.play=animate;
+})(player);

@@ -1,7 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 mtllib house3.mtl
-g default
+o house3
 v 450.694458 0.000000 -192.881958
 v 427.953613 0.000000 -230.634018
 v 419.627380 -39.500038 -229.987198

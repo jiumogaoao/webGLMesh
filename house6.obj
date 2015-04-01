@@ -1,7 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 mtllib house6.mtl
-g default
+o house6
 v 183.703278 123.256485 429.714630
 v 336.813873 115.741875 336.813873
 v 353.776062 -0.000000 353.776062
